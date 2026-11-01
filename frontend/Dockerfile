@@ -1,5 +1,5 @@
 # Node 22 LTS, passend zur lokalen Entwicklung. Node 20 ist seit April 2026 ohne Updates.
-FROM node:22-alpine AS build
+FROM node:26-alpine AS build
 
 WORKDIR /app
 
