@@ -1,0 +1,29 @@
+version: 2
+updates:
+  # Laufzeiten zuerst: Basis-Images wöchentlich, Bibliotheken monatlich.
+  - package-ecosystem: docker
+    directory: /backend
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - runtime
+  - package-ecosystem: docker
+    directory: /frontend
+    schedule:
+      interval: weekly
+    labels:
+      - dependencies
+      - runtime
+  - package-ecosystem: pip
+    directory: /backend
+    schedule:
+      interval: monthly
+    labels:
+      - dependencies
+  - package-ecosystem: npm
+    directory: /frontend
+    schedule:
+      interval: monthly
+    labels:
+      - dependencies

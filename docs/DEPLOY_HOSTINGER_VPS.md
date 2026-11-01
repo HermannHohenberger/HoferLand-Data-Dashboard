@@ -76,20 +76,38 @@ location /maintenance {
 
 Oder alternativ Basic Auth (wenn auf deinem NPM bereits konfiguriert).
 
-## 6) Smoke-Test
+## 6) Daten aktualisieren
+
+ETL laeuft lokal, nicht auf dem VPS. `backend/hoferland.db` gehoert zum Repository. Beim Containerstart kopiert das Backend diese Datei nach `/data/hoferland.db` und ersetzt damit die bisherige Server-Kopie.
+
+Ablauf nach einem lokalen ETL:
+
+```bash
+# lokal
+git add backend/hoferland.db
+git commit -m "Aktualisiere Datenstand"
+git push
+
+# auf dem VPS
+cd ~/HoferLand-Data-Dashboard
+git pull
+docker compose up -d --build
+```
+
+## 7) Smoke-Test
 
 ```bash
 curl -sS https://hoferland.hanstx.cloud/api/health
-curl -sS -X POST "https://hoferland.hanstx.cloud/api/etl/run-sequential?areas=bevoelkerung_gesamt&start_year=2024"
+curl -sS "https://hoferland.hanstx.cloud/api/data/latest?region_id=1&indicator_id=2"
 ```
 
 Erwartung:
 
 - Website oeffnet sich unter `https://hoferland.hanstx.cloud`
 - Healthcheck liefert `{"status":"ok"}`
-- ETL liefert Status je Bereich mit `ok|empty|error`
+- Die API liefert den mitgelieferten Datenstand, ohne ETL auf dem Server
 
-## 7) SQLite Backup (einfach, taeglich)
+## 8) SQLite Backup (einfach, taeglich)
 
 Beispiel als Cron-Job (auf dem VPS):
 

@@ -406,7 +406,7 @@ def parse_average_age_timeseries_csv_by_region_name(
             line
             for line in lines
             if line.startswith(";;;")
-            and len(re.findall(r"(?:19|20)\d{2}", line)) >= 2
+            and len(re.findall(r"(?:19|20)\d{2}", line)) >= 1
         ),
         "",
     )

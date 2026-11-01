@@ -1,6 +1,8 @@
-fastapi
-uvicorn[standard]
-sqlalchemy
-httpx
-pydantic-settings
-python-dotenv
+# Direkte Python-Bibliotheken, fest auf den lokal geprueften Stand.
+# Laufzeiten (Python, Node, Nginx) stehen in den Dockerfiles.
+fastapi==0.135.1
+uvicorn[standard]==0.41.0
+sqlalchemy==2.0.48
+httpx==0.28.1
+pydantic-settings==2.13.1
+python-dotenv==1.2.2

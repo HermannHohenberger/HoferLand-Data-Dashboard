@@ -23,7 +23,7 @@ Stack:
 ## 1) Voraussetzungen
 
 - Python 3.11+
-- Node.js 20+
+- Node.js 22+
 - Zugangsdaten fuer die Genesis API
 
 ## 2) Konfiguration
@@ -44,7 +44,7 @@ ETL_START_YEAR=2014
 ### Backend (einmalig)
 
 ```bash
-cd /Users/Hohenberger/Documents/CLI-Projekte/HoferLand-Data-Dashboard
+cd /Users/Hohenberger/CLI-Projekte/HoferLand-Data-Dashboard
 cd backend
 python3 -m venv .venv
 source .venv/bin/activate
@@ -54,7 +54,7 @@ pip install -r requirements.txt
 ### Frontend (einmalig)
 
 ```bash
-cd /Users/Hohenberger/Documents/CLI-Projekte/HoferLand-Data-Dashboard
+cd /Users/Hohenberger/CLI-Projekte/HoferLand-Data-Dashboard
 cd frontend
 npm install
 ```
@@ -71,7 +71,7 @@ Die typische Startroutine fuer die lokale Entwicklung:
 ### Terminal 1: Backend starten
 
 ```bash
-cd /Users/Hohenberger/Documents/CLI-Projekte/HoferLand-Data-Dashboard
+cd /Users/Hohenberger/CLI-Projekte/HoferLand-Data-Dashboard
 cd backend
 source .venv/bin/activate
 uvicorn app.main:app --reload
@@ -82,7 +82,7 @@ Backend ist dann unter `http://localhost:8000` verfuegbar.
 ### Terminal 2: Frontend starten
 
 ```bash
-cd /Users/Hohenberger/Documents/CLI-Projekte/HoferLand-Data-Dashboard
+cd /Users/Hohenberger/CLI-Projekte/HoferLand-Data-Dashboard
 cd frontend
 npm run dev
 ```
@@ -207,7 +207,7 @@ Ziel fuer den ersten Testbetrieb:
 - Deployment auf Hostinger VPS mit Docker
 - Erreichbarkeit ueber Subdomain `hoferland.hanstx.cloud`
 - Reverse Proxy ueber Nginx Proxy Manager mit Let’s Encrypt
-- SQLite bleibt lokal (persistentes Docker-Volume)
+- SQLite wird lokal gepflegt und mit dem Deploy auf den VPS kopiert
 
 Kurzer Ablauf:
 
@@ -222,3 +222,60 @@ Kurzer Ablauf:
 Details und Schritt-fuer-Schritt:
 
 - Siehe `docs/DEPLOY_HOSTINGER_VPS.md`
+
+## 7) Welche Systeme muss ich starten?
+
+### Lokal (Entwicklung)
+
+Du brauchst 2 Prozesse:
+
+1. **Backend (FastAPI)**
+2. **Frontend (Vite)**
+
+Start:
+
+```bash
+# Terminal 1
+cd backend
+source .venv/bin/activate
+uvicorn app.main:app --reload
+
+# Terminal 2
+cd frontend
+npm run dev
+```
+
+Optional danach ETL ueber `/maintenance` ausfuehren.
+
+### Server (Hostinger VPS, Produktiv/Test)
+
+Du brauchst 2 Docker-Container aus diesem Projekt:
+
+1. `backend`
+2. `frontend`
+
+Start/Neustart:
+
+```bash
+cd ~/HoferLand-Data-Dashboard
+docker compose up -d --build
+```
+
+Status:
+
+```bash
+docker compose ps
+```
+
+Zusatz fuer oeffentliche Erreichbarkeit:
+
+- **Nginx Proxy Manager** muss laufen (separater Container auf dem VPS).
+- DNS fuer `hoferland.hanstx.cloud` muss auf den VPS zeigen.
+
+### Empfohlene Reihenfolge nach Server-Neustart
+
+1. Docker/Container-Umgebung hochfahren
+2. Projekt-Stack starten: `docker compose up -d`
+3. Pruefen: `docker compose ps`
+4. Healthcheck API: `curl http://127.0.0.1:8000/health`
+5. Website unter `https://hoferland.hanstx.cloud` testen
