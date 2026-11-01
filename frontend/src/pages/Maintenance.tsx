@@ -2,14 +2,15 @@ import { useEffect, useMemo, useState } from 'react'
 import { getEtlAreas, runEtlSequential } from '../api/client'
 import { Layout } from '../components/Layout'
 import type { EtlAreaResult } from '../types'
+import { displayText } from '../utils/displayText'
 
 const AREA_LABELS: Record<string, string> = {
-  bevoelkerung_gesamt: 'Bevoelkerung gesamt',
-  auslaender: 'Auslaender',
-  durchschnittsalter: 'Durchschnittsalter (gesamt/deutsch/auslaender)',
-  wanderung_kreisgrenzen: 'Zu- und Fortzuege ueber Kreisgrenzen',
+  bevoelkerung_gesamt: 'Bevölkerung gesamt',
+  auslaender: 'Ausländer',
+  durchschnittsalter: 'Durchschnittsalter (gesamt/deutsch/ausländer)',
+  wanderung_kreisgrenzen: 'Zu- und Fortzüge über Kreisgrenzen',
   arbeitslose_gesamt: 'Arbeitslose gesamt',
-  arbeitslose_auslaender: 'Arbeitslose Auslaender',
+  arbeitslose_auslaender: 'Arbeitslose Ausländer',
   langzeitarbeitslose: 'Langzeitarbeitslose',
   arbeitslosenquote: 'Arbeitslosenquote',
   derived: 'Berechnete Kennzahlen',
@@ -65,10 +66,10 @@ export function Maintenance() {
       setResults(response.results)
       setLastRunAt(new Date().toLocaleString('de-DE'))
       setSuccess(
-        `ETL abgeschlossen fuer ${targets.map(formatAreaName).join(', ')} (ab ${startYear}). Insgesamt aktualisiert/neu geschrieben: ${response.total_inserted_or_updated}.`,
+        `ETL abgeschlossen für ${targets.map(formatAreaName).join(', ')} (ab ${startYear}). Insgesamt aktualisiert/neu geschrieben: ${response.total_inserted_or_updated}.`,
       )
     } catch {
-      setError('ETL-Lauf fehlgeschlagen. Bitte Backend-Logs pruefen.')
+      setError('ETL-Lauf fehlgeschlagen. Bitte Backend-Logs prüfen.')
     } finally {
       setLoading(false)
     }
@@ -81,7 +82,7 @@ export function Maintenance() {
         <div className="space-y-3">
           <h2 className="text-sm font-semibold text-gray-800">ETL-Steuerung</h2>
           <p className="text-xs text-gray-600">
-            Fuehre ETL-Bereiche manuell und nacheinander aus.
+            Führe ETL-Bereiche manuell und nacheinander aus.
           </p>
           <div>
             <label className="mb-1 block text-xs uppercase tracking-wide text-gray-500">
@@ -125,11 +126,11 @@ export function Maintenance() {
       <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
         <h2 className="text-lg font-semibold">Maintenance</h2>
         <p className="mt-1 text-sm text-gray-600">
-          Hier kannst du den ETL manuell ausfuehren. Die Bereiche werden sequentiell verarbeitet.
+          Hier kannst du den ETL manuell ausführen. Die Bereiche werden sequentiell verarbeitet.
         </p>
         {loading && requestedAreas.length ? (
           <p className="mt-2 text-sm text-blue-700">
-            Lauf gestartet fuer: {requestedAreas.map(formatAreaName).join(', ')} (ab {startYear})
+            Lauf gestartet für: {requestedAreas.map(formatAreaName).join(', ')} (ab {startYear})
           </p>
         ) : null}
       </div>
@@ -160,7 +161,7 @@ export function Maintenance() {
                 </div>
                 <div className="mt-1 text-xs text-gray-600">
                   Status: {formatAreaStatus(item.status)}
-                  {item.message ? ` | ${item.message}` : ''}
+                  {item.message ? ` | ${displayText(item.message)}` : ''}
                 </div>
               </div>
             ))}

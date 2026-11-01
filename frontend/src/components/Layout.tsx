@@ -34,7 +34,7 @@ export function Layout({ sidebar, children, activePage = 'dashboard' }: LayoutPr
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
-              Ueber
+              Über
             </a>
             <a
               href="/impressum"

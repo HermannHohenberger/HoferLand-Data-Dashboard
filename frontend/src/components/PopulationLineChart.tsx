@@ -1,6 +1,5 @@
 import {
   CartesianGrid,
-  Legend,
   Line,
   LineChart,
   ResponsiveContainer,
@@ -24,7 +23,7 @@ type PopulationLineChartProps = {
 
 export function PopulationLineChart({
   series,
-  title = 'Bevoelkerungsentwicklung',
+  title = 'Bevölkerungsentwicklung',
   fractionDigits = 0,
 }: PopulationLineChartProps) {
   const formatTick = (value: number) =>
@@ -39,38 +38,54 @@ export function PopulationLineChart({
 
   const chartData = years.map((year) => {
     const row: Record<string, number | null> = { year }
-    for (const regionSeries of series) {
+    series.forEach((regionSeries, index) => {
       const point = regionSeries.points.find((entry) => entry.year === year)
-      row[regionSeries.name] = point?.value ?? null
-    }
+      row[`series-${index}`] = point?.value ?? null
+    })
     return row
   })
 
   return (
-    <div className="h-[460px] rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+    <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
       <p className="mb-4 text-sm font-medium text-gray-700">{title}</p>
-      <ResponsiveContainer width="100%" height="90%">
-        <LineChart data={chartData} margin={{ top: 8, right: 12, left: 16, bottom: 4 }}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="year" />
-          <YAxis width={96} tickFormatter={formatTick} tick={{ fontSize: 12, fill: '#374151' }} />
-          <Tooltip
-            formatter={(value) => (typeof value === 'number' ? formatTick(value) : 'N/A')}
-          />
-          <Legend />
-          {series.map((regionSeries, index) => (
-            <Line
-              key={regionSeries.name}
-              type="monotone"
-              dataKey={regionSeries.name}
-              stroke={getRegionColor(regionSeries.name, index)}
-              strokeWidth={2}
-              dot={false}
-              connectNulls
+      <div className="h-[400px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={chartData} margin={{ top: 8, right: 12, left: 16, bottom: 4 }}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="year" />
+            <YAxis width={96} tickFormatter={formatTick} tick={{ fontSize: 12, fill: '#374151' }} />
+            <Tooltip
+              formatter={(value, _name, item) => {
+                const formatted = typeof value === 'number' ? formatTick(value) : 'N/A'
+                return [formatted, String(item?.name ?? '')]
+              }}
             />
-          ))}
-        </LineChart>
-      </ResponsiveContainer>
+            {series.map((regionSeries, index) => (
+              <Line
+                key={`${regionSeries.name}-${index}`}
+                type="monotone"
+                dataKey={`series-${index}`}
+                name={regionSeries.name}
+                stroke={getRegionColor(regionSeries.name, index)}
+                strokeWidth={2}
+                dot={false}
+                connectNulls
+              />
+            ))}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+      <ul className="mt-3 flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm">
+        {series.map((regionSeries, index) => {
+          const color = getRegionColor(regionSeries.name, index)
+          return (
+            <li key={`${regionSeries.name}-${index}`} className="flex items-center gap-2">
+              <span className="inline-block h-0.5 w-6" style={{ backgroundColor: color }} />
+              <span style={{ color }}>{regionSeries.name}</span>
+            </li>
+          )
+        })}
+      </ul>
     </div>
   )
 }

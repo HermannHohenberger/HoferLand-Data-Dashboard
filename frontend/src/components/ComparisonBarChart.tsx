@@ -41,7 +41,7 @@ export function ComparisonBarChart({
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
       <div className="mb-3 flex items-center justify-between gap-3">
-        <p className="text-sm font-medium text-gray-700">Veraenderung</p>
+        <p className="text-sm font-medium text-gray-700">Veränderung</p>
         <div className="flex items-center gap-2">
           <label className="text-xs text-gray-500">Vergleichsjahr</label>
           <select
@@ -64,8 +64,8 @@ export function ComparisonBarChart({
             <tr className="border-b border-gray-200 text-left text-gray-600">
               <th className="px-3 py-2 font-medium">Region</th>
               <th className="px-3 py-2 font-medium">Aktueller Wert</th>
-              <th className="px-3 py-2 font-medium">Veraenderung absolut</th>
-              <th className="px-3 py-2 font-medium">Veraenderung in %</th>
+              <th className="px-3 py-2 font-medium">Veränderung absolut</th>
+              <th className="px-3 py-2 font-medium">Veränderung in %</th>
             </tr>
           </thead>
           <tbody>

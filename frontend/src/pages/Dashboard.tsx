@@ -7,6 +7,7 @@ import { PopulationLineChart } from '../components/PopulationLineChart'
 import { TimeRangeFilter } from '../components/TimeRangeFilter'
 import type { DataPoint, Indicator, Region } from '../types'
 import { getRegionColor } from '../constants/regionColors'
+import { displayText } from '../utils/displayText'
 
 const CURRENT_YEAR = new Date().getFullYear()
 const LAST_COMPLETE_YEAR = CURRENT_YEAR - 1
@@ -118,7 +119,7 @@ export function Dashboard() {
           : null
 
       return {
-        name: entry.regionName,
+        name: displayText(entry.regionName),
         currentValue: currentPoint?.value ?? null,
         changeAbsolute,
         changePercent,
@@ -234,7 +235,7 @@ export function Dashboard() {
 
         setLineSeries(seriesBySelection)
       } catch {
-        setError('Daten konnten nicht geladen werden. Bitte zuerst ETL ausfuehren.')
+        setError('Daten konnten nicht geladen werden. Bitte zuerst ETL ausführen.')
       } finally {
         setLoading(false)
       }
@@ -310,12 +311,12 @@ export function Dashboard() {
                       }
                     }}
                   />
-                  <span>{region.name}</span>
+                  <span>{displayText(region.name)}</span>
                 </label>
               ))}
             </div>
             <p className="text-xs text-gray-500">
-              Ausgewaehlt: {selectedRegionIds.length} von {regions.length}
+              Ausgewählt: {selectedRegionIds.length} von {regions.length}
             </p>
           </div>
 
@@ -328,7 +329,7 @@ export function Dashboard() {
             >
               {themes.map((theme) => (
                 <option key={theme} value={theme}>
-                  {theme}
+                  {displayText(theme)}
                 </option>
               ))}
             </select>
@@ -372,12 +373,12 @@ export function Dashboard() {
                       }
                     }}
                   />
-                  <span>{indicator.name}</span>
+                  <span>{displayText(indicator.name)}</span>
                 </label>
               ))}
             </div>
             <p className="text-xs text-gray-500">
-              Ausgewaehlt: {selectedAreaIds.length} von {themeIndicators.length}
+              Ausgewählt: {selectedAreaIds.length} von {themeIndicators.length}
             </p>
           </div>
 
@@ -402,19 +403,19 @@ export function Dashboard() {
             Maintenance
           </a>
           {' '}
-          ausfuehren.
+          ausführen.
         </div>
       ) : null}
       {error ? <div className="rounded-md bg-red-100 p-3 text-sm text-red-700">{error}</div> : null}
 
       <div className="grid gap-4 md:grid-cols-2">
         <KpiCard
-          title={`Aktuell: ${selectedTheme ?? 'Thema'}: ${selectedIndicator?.name ?? 'Bereich'}`}
+          title={`Aktuell: ${displayText(selectedTheme ?? 'Thema')}: ${displayText(selectedIndicator?.name ?? 'Bereich')}`}
           value={formatNumber(latestPoint?.value, valueFractionDigits)}
           subtitle={
             latestPoint
-              ? `Region: ${primaryRegion?.name ?? 'N/A'} | Datenstand: ${latestPoint.year}`
-              : `Region: ${primaryRegion?.name ?? 'N/A'} | Kein Datenstand`
+              ? `Region: ${displayText(primaryRegion?.name ?? 'N/A')} | Datenstand: ${latestPoint.year}`
+              : `Region: ${displayText(primaryRegion?.name ?? 'N/A')} | Kein Datenstand`
           }
         />
         <KpiCard
@@ -431,21 +432,22 @@ export function Dashboard() {
           }
           valueClassName="mt-1 text-base font-semibold"
           subtitle={`Tabelle: ${selectedIndicator?.genesis_table ?? 'N/A'}${
-            selectedIndicator?.description ? ` | ${selectedIndicator.description}` : ''
+            selectedIndicator?.description ? ` | ${displayText(selectedIndicator.description)}` : ''
           }`}
         />
       </div>
 
       <PopulationLineChart
-        title={`${selectedTheme ?? 'Thema'}: ${selectedIndicator?.name ?? 'Bereich'}`}
+        title={`${displayText(selectedTheme ?? 'Thema')}: ${displayText(selectedIndicator?.name ?? 'Bereich')}`}
         fractionDigits={valueFractionDigits}
         series={lineSeries.map((entry) => ({
-          name:
+          name: displayText(
             selectedRegionIds.length > 1 && selectedIndicators.length > 1
               ? `${entry.regionName} - ${entry.indicatorName}`
               : selectedIndicators.length > 1
                 ? entry.indicatorName
                 : entry.regionName,
+          ),
           points: entry.points,
         }))}
       />

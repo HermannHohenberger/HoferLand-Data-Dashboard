@@ -1,5 +1,5 @@
 import { MarkdownStaticPage } from './MarkdownStaticPage'
 
 export function Ueber() {
-  return <MarkdownStaticPage title="Ueber" markdownPath="/ueber.md" activePage="ueber" />
+  return <MarkdownStaticPage title="Über" markdownPath="/ueber.md" activePage="ueber" />
 }
