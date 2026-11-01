@@ -442,11 +442,9 @@ export function Dashboard() {
         fractionDigits={valueFractionDigits}
         series={lineSeries.map((entry) => ({
           name: displayText(
-            selectedRegionIds.length > 1 && selectedIndicators.length > 1
+            selectedIndicators.length > 1
               ? `${entry.regionName} - ${entry.indicatorName}`
-              : selectedIndicators.length > 1
-                ? entry.indicatorName
-                : entry.regionName,
+              : entry.regionName,
           ),
           points: entry.points,
         }))}
