@@ -1,6 +1,6 @@
 # Python 3.11 bekommt Sicherheitsupdates bis Oktober 2027.
 # Patchstände kommen beim Image-Neuaufbau mit, Dependabot hebt die Linie an.
-FROM python:3.11-slim
+FROM python:3.15-slim
 
 WORKDIR /app
 
